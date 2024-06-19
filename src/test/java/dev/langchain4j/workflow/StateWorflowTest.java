@@ -1,5 +1,5 @@
 package dev.langchain4j.workflow;
 
 class StateWorflowTest {
-    // TODO-1: Add tests for the StateWorkflow class
+    // TODO-1: Add tests for the DefaultStateWorkflow class
 }

@@ -1,9 +1,15 @@
 package dev.langchain4j.workflow;
 
+import dev.langchain4j.workflow.node.Conditional;
+import dev.langchain4j.workflow.node.Node;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
 
 public class ExampleMain {
-        public static void main(String[] args) {
+        public static void main(String[] args) throws IOException {
 
             // Define a stateful bean
             class MyStatefulBean {
@@ -39,13 +45,17 @@ public class ExampleMain {
             Node<MyStatefulBean, String> node3 = Node.from("node3", node3Func);
             Node<MyStatefulBean, String> node4 = Node.from("node4", node4Func);
 
+
             // Create workflow
-            StateWorkflow<MyStatefulBean> workflow = DefaultWorkflow.addStatefulBan(myStatefulBean).build();
+            DefaultStateWorkflow<MyStatefulBean> workflow = DefaultStateWorkflow.<MyStatefulBean>builder() //DefaultWorkflowTmp.addStatefulBan(myStatefulBean).build();
+                    .statefulBean(myStatefulBean)
+                    .addNodes(Arrays.asList(node1, node2, node3))
+                    .build();
 
             // Add nodes to workflow
-            workflow.addNode(node1);
+            /*workflow.addNode(node1);
             workflow.addNode(node2);
-            workflow.addNode(node3);
+            workflow.addNode(node3); */
             workflow.addNode(node4);
 
             // Define edges
@@ -76,5 +86,11 @@ public class ExampleMain {
             String transitions = workflow.prettyTransitions();
             System.out.println("Transitions: \n");
             System.out.println(transitions);
+
+            // Dot format generated
+            System.out.println(workflow.generateDotFormat());
+
+            // Generate workflow image
+            workflow.generateWorkflowImage("workflow.svg");
         }
 }

@@ -1,4 +1,7 @@
-package dev.langchain4j.workflow;
+package dev.langchain4j.workflow.transition;
+
+import dev.langchain4j.workflow.node.Node;
+import dev.langchain4j.workflow.WorkflowState;
 
 public class Transition<T> {
     private final Node<T, ?> from;

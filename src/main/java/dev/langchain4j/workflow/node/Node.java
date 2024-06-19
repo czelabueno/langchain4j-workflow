@@ -1,4 +1,4 @@
-package dev.langchain4j.workflow;
+package dev.langchain4j.workflow.node;
 
 import java.util.Objects;
 import java.util.function.Function;
