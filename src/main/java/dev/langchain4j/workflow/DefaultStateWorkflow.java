@@ -133,7 +133,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         }
     }
 
-    public List<Transition<T>> getTransitions() {
+    public List<Transition<T>> getComputedTransitions() {
         return new ArrayList<>(transitions);
     }
 
@@ -152,6 +152,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         return sb.toString();
     }
 
+    // TODO - Allow override of default dot format
     @Override
     public String generateDotFormat(){
         StringBuilder sb = new StringBuilder();
@@ -182,6 +183,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         return sb.toString();
     }
 
+    // TODO - Move to a separate class in graph package
     @Override
     public void generateWorkflowImage(String outputPath) throws IOException {
         String dotFormat = generateDotFormat();
