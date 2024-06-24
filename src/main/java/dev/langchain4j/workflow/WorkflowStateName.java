@@ -1,5 +1,5 @@
 package dev.langchain4j.workflow;
 
-public enum WorkflowState {
+public enum WorkflowStateName {
     END
 }
