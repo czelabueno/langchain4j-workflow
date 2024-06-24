@@ -1,20 +1,19 @@
 package dev.langchain4j.workflow.node;
 
+import lombok.Getter;
+
 import java.util.Objects;
 import java.util.function.Function;
 
 public class Node<T, R> {
 
+    @Getter
     private final String name;
     private final Function<T, R> function;
 
     public Node(String name, Function<T, R> function) {
         this.name = name;
         this.function = function;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public R execute(T input) {
