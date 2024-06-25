@@ -35,7 +35,8 @@ public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
         if (dotFormat == null) {
             dotFormat = defaultDotFormat(transitions);
         }
-        log.debug("Using Dot format: " + System.lineSeparator() + dotFormat);
+        System.out.println("Using Dot format: " + System.lineSeparator() + dotFormat);
+        //log.debug("Using Dot format: " + System.lineSeparator() + dotFormat);
         Graphviz.fromString(dotFormat)
                 .render(DEFAULT_IMAGE_FORMAT)
                 .toFile(new File(outputPath));
@@ -64,22 +65,56 @@ public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
         for (Transition<T> transition : transitions) {
             if (transition.getTo() instanceof Node) {
                 sb.append(" ") // NodeFrom -> NodeTo
-                        .append(transition.getFrom().getName())
+                        .append(transition.getFrom() instanceof Node ?
+                                sanitizeNodeName(((Node<T,?>) transition.getFrom()).getName()) :
+                                transition.getFrom().toString().toLowerCase())
                         .append(" -> ")
-                        .append(((Node<T,?>) transition.getTo()).getName()).append(";")
+                        .append(sanitizeNodeName(((Node<T,?>) transition.getTo()).getName())).append(";")
                         .append(System.lineSeparator());
-            } else if (transition.getTo() == WorkflowStateName.END) {
+            } else if (transition.getTo() == WorkflowStateName.END && transition.getFrom() instanceof Node) {
                 sb.append(" ") // NodeFrom -> END
-                        .append(transition.getFrom().getName())
+                        .append(sanitizeNodeName(((Node<T,?>) transition.getFrom()).getName()))
                         .append(" -> ")
                         .append(((WorkflowStateName) transition.getTo()).toString().toLowerCase()).append(";")
                         .append(System.lineSeparator())
-                        .append(System.lineSeparator())
-                        .append(" ").append(((WorkflowStateName) transition.getTo()).toString().toLowerCase()+" [shape=Msquare];")
                         .append(System.lineSeparator());
             }
         }
+        sb.append(" ")
+                .append(WorkflowStateName.START.toString().toLowerCase()+" [shape=Mdiamond, fillcolor=\"orange\"];")
+                .append(System.lineSeparator());
+        sb.append(" ")
+                .append(WorkflowStateName.END.toString().toLowerCase()+" [shape=Msquare, fillcolor=\"lightgreen\"];")
+                .append(System.lineSeparator());
         sb.append("}");
         return sb.toString();
+    }
+
+    private static String sanitizeNodeName(String nodeName) {
+        // Remove special characters
+        String sanitized = nodeName.replaceAll("[^a-zA-Z0-9 ]", "");
+
+        // Convert to camel case
+        String[] words = sanitized.split(" ");
+        StringBuilder camelCase = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            if (words[i].isEmpty()) {
+                continue;
+            }
+            if (i == 0) {
+                camelCase.append(words[i].substring(0, 1).toUpperCase());
+                if (words[i].length() > 1) {
+                    camelCase.append(words[i].substring(1).toLowerCase());
+                }
+            } else {
+                camelCase.append(words[i].substring(0, 1).toUpperCase());
+                if (words[i].length() > 1) {
+                    camelCase.append(words[i].substring(1).toLowerCase());
+                }
+            }
+        }
+
+        return camelCase.toString();
     }
 }
