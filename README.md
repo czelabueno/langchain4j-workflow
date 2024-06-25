@@ -157,7 +157,7 @@ You can check all examples in the [langchain4j-worflow-examples](https://github.
 
 ### RAG
 - **Corrective RAG (CRAG)**:
-  - Java example: [`langchain4j-corrective-rag`](https://github.com/czelabueno/langchain4j-workflow-examples/langchain4j-corrective-rag/src/test/java/dev/langchain4j/rag/corrective/CorrectiveRagIT.java)
+  - Java example: [`langchain4j-corrective-rag`](https://github.com/czelabueno/langchain4j-workflow-examples/tree/main/langchain4j-corrective-rag)
   - Based on Paper: https://arxiv.org/pdf/2401.15884
 - **Adaptive RAG**:
   - Java example: _Very soon_
