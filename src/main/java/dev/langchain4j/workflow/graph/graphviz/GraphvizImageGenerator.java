@@ -31,15 +31,17 @@ public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
     @Override
     public void generateImage(List<Transition<T>> transitions, String outputPath) throws IOException {
         // Generate image using Graphviz from dot format
-        log.debug("Generating image at: " + outputPath + " with format: " + DEFAULT_IMAGE_FORMAT);
+        log.debug("Generating workflow image..");
+        log.debug("Using default image format: " + DEFAULT_IMAGE_FORMAT);
         if (dotFormat == null) {
             dotFormat = defaultDotFormat(transitions);
         }
-        System.out.println("Using Dot format: " + System.lineSeparator() + dotFormat);
-        //log.debug("Using Dot format: " + System.lineSeparator() + dotFormat);
+        log.debug("Using Dot format: " + System.lineSeparator() + dotFormat);
+        log.debug("Saving workflow image..");
         Graphviz.fromString(dotFormat)
                 .render(DEFAULT_IMAGE_FORMAT)
                 .toFile(new File(outputPath));
+        log.debug("Workflow image saved to: " + outputPath);
     }
 
     public static class GraphvizImageGeneratorBuilder<T> {
@@ -114,7 +116,6 @@ public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
                 }
             }
         }
-
         return camelCase.toString();
     }
 }
