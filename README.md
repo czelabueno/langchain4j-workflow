@@ -9,7 +9,7 @@ LangChain4j Workflow is influenced by [LangGraph](https://langchain-ai.github.io
 
 LangChain4j Workflow is designed to integrate seamlessly with [LangChain4j](https://docs.langchain4j.dev/), enabling you to define custom workflows using all the features that LangChain4j offers. This integration could provide a comprehensive toolset for building advanced AI applications.
 
-> **Give me a star**: If you find this repository beneficial, don't forget to give it a star! 🌟 Your support increases its chances of being merged with the LangChain4j codebase. It's a simple way to show your appreciation and help this project grow!
+> 🌟 **Starring me**: If you find this repository beneficial, don't forget to give it a star! 🌟 Your support increases its chances of being merged with the LangChain4j codebase. It's a simple way to show your appreciation and help this project grow!
 
 ## Key Features
 - **Stateful**: LangChain4j Workflow is a stateful engine, enabling you to design custom states as POJO and transitions. This feature provides a robust foundation for managing the flow and state of your application.
