@@ -57,4 +57,13 @@
     </dependency>
 
   </dependencies>
+
+  <developers>
+    <developer>
+      <id>czelabueno</id>
+      <email>c.zelabueno@gmail.com</email>
+      <url>https://github.com/czelabueno</url>
+    </developer>
+  </developers>
+
 </project>
