@@ -154,6 +154,10 @@ You can generate a workflow image with all computed transitions:
 
 ## LLM examples
 You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository. Please note that examples can be modified and more examples will be added over time.
+### MoA
+- **Mixture-of-Agents (MoA)**:
+  - Java example: [`langchain4j-moa`](langchain4j-moa)
+  - Based on Paper: https://arxiv.org/pdf/2406.04692
 
 ### RAG
 - **Corrective RAG (CRAG)**:
