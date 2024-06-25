@@ -1,5 +1,7 @@
 package dev.langchain4j.workflow.node;
 
+import lombok.NonNull;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -7,7 +9,7 @@ public class Conditional<T> {
 
     private final Function<T, Node<T,?>> condition;
 
-    public Conditional(Function<T, Node<T,?>> condition) {
+    public Conditional(@NonNull Function<T, Node<T,?>> condition) {
         this.condition = condition;
     }
 

@@ -1,6 +1,7 @@
 package dev.langchain4j.workflow.node;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -11,7 +12,10 @@ public class Node<T, R> {
     private final String name;
     private final Function<T, R> function;
 
-    public Node(String name, Function<T, R> function) {
+    public Node(@NonNull String name, @NonNull Function<T, R> function) {
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Node name cannot be empty");
+        }
         this.name = name;
         this.function = function;
     }
