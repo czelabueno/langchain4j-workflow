@@ -86,6 +86,9 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
 
     private void runNode(Node<T,?> node) {
         if (node == null) return;
+        log.debug("STARTING workflow in normally mode..");
+        if (node == startNode)
+            transitions.add(Transition.from(WorkflowStateName.START, node));
         synchronized (statefulBean){
             node.execute(statefulBean);
         }
@@ -113,8 +116,10 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     @Override
     public T runStream(Consumer<Node<T, ?>> eventConsumer) {
         transitions.clear(); // clean previous transitions
+        log.debug("STARTING workflow in stream mode..");
         Queue<Object> queue = new LinkedBlockingQueue<>();
         queue.add(startNode);
+        transitions.add(Transition.from(WorkflowStateName.START, startNode));
         while (!queue.isEmpty()) {
             Object current = queue.poll();
             if (current instanceof Node) {
@@ -150,21 +155,22 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         return statefulBean;
     }
 
+    @Override
     public List<Transition<T>> getComputedTransitions() {
         return new ArrayList<>(transitions);
     }
 
     public String prettyTransitions() {
         StringBuilder sb = new StringBuilder();
-        Node<T,?> lastTo = null;
+        Object lastTo = null;
         for (Transition<T> transition : transitions) {
             if (transition.getFrom().equals(lastTo)) {
                 sb.append(" -> ").append(transition.getTo() instanceof Node ? ((Node<T,?>) transition.getTo()).getName() : transition.getTo().toString());
             } else {
                 if (sb.length() > 0) sb.append(" ");
-                sb.append(transition.getFrom().getName()).append(" -> ").append(transition.getTo() instanceof Node ? ((Node<T,?>) transition.getTo()).getName() : transition.getTo().toString());
+                sb.append(transition.getFrom() instanceof Node ? ((Node<T,?>)transition.getFrom()).getName() : transition.getFrom().toString()).append(" -> ").append(transition.getTo() instanceof Node ? ((Node<T,?>) transition.getTo()).getName() : transition.getTo().toString());
             }
-            lastTo = transition.getTo() instanceof Node ? (Node<T,?>) transition.getTo() : null;
+            lastTo = transition.getTo() instanceof Node ? (Node<T,?>) transition.getTo() : transition.getTo();
         }
         return sb.toString();
     }

@@ -2,8 +2,10 @@ package dev.langchain4j.workflow;
 
 import dev.langchain4j.workflow.node.Conditional;
 import dev.langchain4j.workflow.node.Node;
+import dev.langchain4j.workflow.transition.Transition;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface StateWorkflow<T> {
@@ -18,6 +20,8 @@ public interface StateWorkflow<T> {
     T run();
 
     T runStream(Consumer<Node<T, ?>> eventConsumer);
+
+    List<Transition<T>> getComputedTransitions();
 
     void generateWorkflowImage(String outputPath) throws IOException;
 
