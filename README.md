@@ -18,6 +18,7 @@ LangChain4j Workflow is designed to integrate seamlessly with [LangChain4j](http
 - **Iterative**: The engine supports the implementation of loops and conditionals in your custom workflows. This feature allows for complex logic and flow control within your workflows.
 - **Streaming Support**: LangChain4j Workflow supports streaming outputs as they are produced by each node. This feature allows for real-time processing and response in your application.
 - **Integration**: LangChain4j Workflow is designed to integrate seamlessly with [LangChain4j](https://docs.langchain4j.dev/), enabling you to define custom workflows using all the features that LangChain4j offers. This integration provides a comprehensive toolset for building advanced AI applications.
+- **Visualization**: The engine supports the generation of workflow images. This feature allows you to visualize the flow computed of your app workflow. By Default it uses `Graphhviz` lib to generate the image, but you implement your own image generator on `GraphImageGenerator.java` interface.
 
 ## Installation
 ```shell
@@ -156,7 +157,7 @@ You can generate a workflow image with all computed transitions:
 You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository. Please note that examples can be modified and more examples will be added over time.
 ### MoA
 - **Mixture-of-Agents (MoA)**:
-  - Java example: [`langchain4j-moa`](langchain4j-moa)
+  - Java example: [`langchain4j-moa`](https://github.com/czelabueno/langchain4j-workflow-examples/tree/main/langchain4j-moa)
   - Based on Paper: https://arxiv.org/pdf/2406.04692
 
 ### RAG
