@@ -27,7 +27,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     private volatile Node<T,?> startNode;
     private final T statefulBean;
     private final List<Transition<T>> transitions;
-    private final GraphImageGenerator<T> graphImageGenerator;
+    private GraphImageGenerator<T> graphImageGenerator;
 
     @Builder
     public DefaultStateWorkflow(@NonNull T statefulBean,
@@ -51,6 +51,10 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         for (Node<T,?> node : addNodes) {
             this.adjList.putIfAbsent(node, Collections.synchronizedList(new ArrayList<>()));
         }
+    }
+
+    public void setGraphImageGenerator(GraphImageGenerator<T> graphImageGenerator) {
+        this.graphImageGenerator = graphImageGenerator;
     }
 
     @Override
@@ -80,13 +84,14 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     @Override
     public T run() {
         transitions.clear(); // clean previous transitions
+        log.debug("STARTING workflow in normal mode..");
         runNode(startNode);
         return statefulBean;
     }
 
     private void runNode(Node<T,?> node) {
         if (node == null) return;
-        log.debug("STARTING workflow in normally mode..");
+        log.debug("Running node name: " + node.getName() + "..");
         if (node == startNode)
             transitions.add(Transition.from(WorkflowStateName.START, node));
         synchronized (statefulBean){
