@@ -26,13 +26,13 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     private final Map<Node<T,?>, List<Object>> adjList;
     private volatile Node<T,?> startNode;
     private final T statefulBean;
-    private final List<Transition<T>> transitions;
-    private GraphImageGenerator<T> graphImageGenerator;
+    private final List<Transition> transitions;
+    private GraphImageGenerator graphImageGenerator;
 
     @Builder
     public DefaultStateWorkflow(@NonNull T statefulBean,
                                 @Singular List<Node<T,?>> addNodes,
-                                GraphImageGenerator<T> graphImageGenerator) {
+                                GraphImageGenerator graphImageGenerator) {
         if (addNodes.isEmpty()) {
             throw new IllegalArgumentException("At least one node must be added to the workflow");
         }
@@ -53,7 +53,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         }
     }
 
-    public void setGraphImageGenerator(GraphImageGenerator<T> graphImageGenerator) {
+    public void setGraphImageGenerator(GraphImageGenerator graphImageGenerator) {
         this.graphImageGenerator = graphImageGenerator;
     }
 
@@ -77,6 +77,7 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         adjList.get(from).add(state);
     }
 
+    @Override
     public void startNode(Node<T,?> startNode){
         this.startNode = startNode;
     }
@@ -102,7 +103,15 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
             nextNodes = adjList.get(node);
         }
         for (Object nextNode : nextNodes) {
-            if (nextNode instanceof Node) {
+            if (nextNode instanceof WorkflowStateName) {
+                WorkflowStateName next = (WorkflowStateName) nextNode;
+                if (next == WorkflowStateName.END) {
+                    log.debug("Reached END state");
+                    transitions.add(Transition.from(node, WorkflowStateName.END));
+                    return;
+                }
+                transitions.add(Transition.from(node, next));
+            } else if (nextNode instanceof Node) {
                 Node<T,?> next = (Node<T,?>) nextNode;
                 transitions.add(Transition.from(node, next));
                 runNode(next);
@@ -110,10 +119,6 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
                 Node<T,?> conditionalNode = ((Conditional<T>) nextNode).evaluate(statefulBean);
                 transitions.add(Transition.from(node, conditionalNode));
                 runNode(conditionalNode);
-            } else if (nextNode == WorkflowStateName.END) {
-                log.debug("Reached END state");
-                transitions.add(Transition.from(node, WorkflowStateName.END));
-                return;
             }
         }
     }
@@ -129,26 +134,32 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
             Object current = queue.poll();
             if (current instanceof Node) {
                 Node<T,?> currentNode = (Node<T,?>) current;
-                eventConsumer.accept(currentNode);
+                //eventConsumer.accept(currentNode);
                 synchronized (statefulBean){
                     currentNode.execute(statefulBean);
                 }
+                eventConsumer.accept(currentNode);
                 List<Object> nextNodes;
                 synchronized (adjList) {
                     nextNodes = adjList.get(currentNode);
                 }
                 if (nextNodes != null) {
                     for (Object next : nextNodes) {
-                        if (next instanceof Node) {
+                        if (next instanceof WorkflowStateName) {
+                            WorkflowStateName nextState = (WorkflowStateName) next;
+                            if (nextState == WorkflowStateName.END) {
+                                transitions.add(Transition.from(currentNode, WorkflowStateName.END));
+                                return statefulBean;
+                            }
+                            transitions.add(Transition.from(currentNode, next));
+                            queue.add(next);
+                        } else if (next instanceof Node) {
                             transitions.add(Transition.from(currentNode, next));
                             queue.add(next);
                         } else if (next instanceof Conditional) {
                             Node<T,?> conditionalNode = ((Conditional<T>) next).evaluate(statefulBean);
                             transitions.add(Transition.from(currentNode, conditionalNode));
                             queue.add(conditionalNode);
-                        } else if (next == WorkflowStateName.END) {
-                            transitions.add(Transition.from(currentNode, WorkflowStateName.END));
-                            return statefulBean;
                         }
                     }
                 }
@@ -161,21 +172,21 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     }
 
     @Override
-    public List<Transition<T>> getComputedTransitions() {
+    public List<Transition> getComputedTransitions() {
         return new ArrayList<>(transitions);
     }
 
     public String prettyTransitions() {
         StringBuilder sb = new StringBuilder();
         Object lastTo = null;
-        for (Transition<T> transition : transitions) {
+        for (Transition transition : transitions) {
             if (transition.getFrom().equals(lastTo)) {
-                sb.append(" -> ").append(transition.getTo() instanceof Node ? ((Node<T,?>) transition.getTo()).getName() : transition.getTo().toString());
+                sb.append(" -> ").append(transition.getTo() instanceof Node ? ((Node) transition.getTo()).getName() : transition.getTo().toString());
             } else {
                 if (sb.length() > 0) sb.append(" ");
-                sb.append(transition.getFrom() instanceof Node ? ((Node<T,?>)transition.getFrom()).getName() : transition.getFrom().toString()).append(" -> ").append(transition.getTo() instanceof Node ? ((Node<T,?>) transition.getTo()).getName() : transition.getTo().toString());
+                sb.append(transition.getFrom() instanceof Node ? ((Node)transition.getFrom()).getName() : transition.getFrom().toString()).append(" -> ").append(transition.getTo() instanceof Node ? ((Node) transition.getTo()).getName() : transition.getTo().toString());
             }
-            lastTo = transition.getTo() instanceof Node ? (Node<T,?>) transition.getTo() : transition.getTo();
+            lastTo = transition.getTo() instanceof Node ? (Node) transition.getTo() : transition.getTo();
         }
         return sb.toString();
     }

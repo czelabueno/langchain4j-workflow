@@ -11,6 +11,10 @@ public class Node<T, R> {
     @Getter
     private final String name;
     private final Function<T, R> function;
+    @Getter
+    private T functionInput;
+    @Getter
+    private R functionOutput;
 
     public Node(@NonNull String name, @NonNull Function<T, R> function) {
         if (name.trim().isEmpty()) {
@@ -21,7 +25,13 @@ public class Node<T, R> {
     }
 
     public R execute(T input) {
-        return function.apply(input);
+        if (input == null) {
+            throw new IllegalArgumentException("Function input cannot be null");
+        }
+        R output = function.apply(input);
+        functionInput = input;
+        functionOutput = output;
+        return output;
     }
 
     public static <T, R> Node<T, R> from(String name, Function<T, R> function) {

@@ -151,7 +151,7 @@ START -> node1 -> node2 -> node3 -> node2 -> node3 -> node4 -> END
 ```
 You can generate a workflow image with all computed transitions:
 
-![Workflow Image](image/my-workflow.svg)
+![Workflow Image](langchain4j-workflow/image/my-workflow.svg)
 
 ## LLM examples
 You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository. Please note that examples can be modified and more examples will be added over time.

@@ -13,27 +13,33 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
+public class GraphvizImageGenerator implements GraphImageGenerator {
 
     private static final Logger log = LoggerFactory.getLogger(GraphvizImageGenerator.class);
 
     private String dotFormat;
     private static final Format DEFAULT_IMAGE_FORMAT = Format.SVG;
 
-    private GraphvizImageGenerator(GraphvizImageGeneratorBuilder<T> builder) {
+    private GraphvizImageGenerator(GraphvizImageGeneratorBuilder builder) {
         this.dotFormat = builder.dotFormat;
     }
 
-    public static <T> GraphvizImageGeneratorBuilder<T> builder() {
-        return new GraphvizImageGeneratorBuilder<>();
+    public static GraphvizImageGeneratorBuilder builder() {
+        return new GraphvizImageGeneratorBuilder();
     }
 
     @Override
-    public void generateImage(List<Transition<T>> transitions, String outputPath) throws IOException {
+    public void generateImage(List<Transition> transitions, String outputPath) throws IOException {
+        if (outputPath == null || outputPath.isEmpty()) {
+            throw new IllegalArgumentException("Output path can not be null or empty. Cannot generate image.");
+        }
         // Generate image using Graphviz from dot format
         log.debug("Generating workflow image..");
         log.debug("Using default image format: " + DEFAULT_IMAGE_FORMAT);
         if (dotFormat == null) {
+            if (transitions == null || transitions.isEmpty()) {
+                throw new IllegalArgumentException("Transitions list can not be null or empty when dotFormat is null. Cannot generate image.");
+            }
             dotFormat = defaultDotFormat(transitions);
         }
         log.debug("Using Dot format: " + System.lineSeparator() + dotFormat);
@@ -44,41 +50,47 @@ public class GraphvizImageGenerator<T> implements GraphImageGenerator<T> {
         log.debug("Workflow image saved to: " + outputPath);
     }
 
-    public static class GraphvizImageGeneratorBuilder<T> {
+    public static class GraphvizImageGeneratorBuilder {
         private String dotFormat;
 
-        public GraphvizImageGeneratorBuilder<T> dotFormat(String dotFormat) {
+        public GraphvizImageGeneratorBuilder dotFormat(String dotFormat) {
             this.dotFormat = dotFormat;
             return this;
         }
 
-        public GraphvizImageGenerator<T> build() {
-            return new GraphvizImageGenerator<T>(this);
+        public GraphvizImageGenerator build() {
+            return new GraphvizImageGenerator(this);
         }
     }
 
-    private String defaultDotFormat(List<Transition<T>> transitions) {
+    private String defaultDotFormat(List<Transition> transitions) {
         StringBuilder sb = new StringBuilder();
         sb.append("digraph workflow {").append(System.lineSeparator());
         sb.append(" ").append("node [style=filled,fillcolor=lightgrey]").append(System.lineSeparator());
         sb.append(" ").append("rankdir=LR;").append(System.lineSeparator());
         sb.append(" ").append("beautify=true").append(System.lineSeparator());
         sb.append(System.lineSeparator());
-        for (Transition<T> transition : transitions) {
+        for (Transition transition : transitions) {
             if (transition.getTo() instanceof Node) {
                 sb.append(" ") // NodeFrom -> NodeTo
                         .append(transition.getFrom() instanceof Node ?
-                                sanitizeNodeName(((Node<T,?>) transition.getFrom()).getName()) :
+                                sanitizeNodeName(((Node) transition.getFrom()).getName()) :
                                 transition.getFrom().toString().toLowerCase())
                         .append(" -> ")
-                        .append(sanitizeNodeName(((Node<T,?>) transition.getTo()).getName())).append(";")
+                        .append(sanitizeNodeName(((Node) transition.getTo()).getName())).append(";")
                         .append(System.lineSeparator());
             } else if (transition.getTo() == WorkflowStateName.END && transition.getFrom() instanceof Node) {
                 sb.append(" ") // NodeFrom -> END
-                        .append(sanitizeNodeName(((Node<T,?>) transition.getFrom()).getName()))
+                        .append(sanitizeNodeName(((Node) transition.getFrom()).getName()))
                         .append(" -> ")
                         .append(((WorkflowStateName) transition.getTo()).toString().toLowerCase()).append(";")
                         .append(System.lineSeparator())
+                        .append(System.lineSeparator());
+            } else {
+                sb.append(" ") // NodeFrom -> NodeTo
+                        .append(sanitizeNodeName(transition.getFrom().toString().toLowerCase()))
+                        .append(" -> ")
+                        .append(sanitizeNodeName(transition.getTo().toString().toLowerCase())).append(";")
                         .append(System.lineSeparator());
             }
         }

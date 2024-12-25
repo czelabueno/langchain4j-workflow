@@ -17,11 +17,13 @@ public interface StateWorkflow<T> {
 
     void putEdge(Node<T, ?> from, WorkflowStateName state);
 
+    void startNode(Node<T,?> startNode);
+
     T run();
 
     T runStream(Consumer<Node<T, ?>> eventConsumer);
 
-    List<Transition<T>> getComputedTransitions();
+    List<Transition> getComputedTransitions();
 
     void generateWorkflowImage(String outputPath) throws IOException;
 

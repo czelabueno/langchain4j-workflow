@@ -10,10 +10,11 @@ public class Conditional<T> {
     private final Function<T, Node<T,?>> condition;
 
     public Conditional(@NonNull Function<T, Node<T,?>> condition) {
-        this.condition = condition;
+        this.condition = Objects.requireNonNull(condition, "Condition function cannot be null");
     }
 
     public Node<T,?> evaluate(T input) {
+        Objects.requireNonNull(input, "Function Input cannot be null");
         return condition.apply(input);
     }
 

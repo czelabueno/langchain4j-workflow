@@ -4,12 +4,11 @@ import dev.langchain4j.workflow.node.Conditional;
 import dev.langchain4j.workflow.node.Node;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Function;
 
 public class ExampleMain {
-        public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
             // Define a stateful bean
             class MyStatefulBean {
@@ -69,28 +68,26 @@ public class ExampleMain {
                     return node2;
                 }
             }));
-            workflow.putEdge(node4, WorkflowState.END);
+            workflow.putEdge(node4, WorkflowStateName.END);
 
             // Start workflow
             workflow.startNode(node1);
 
             // Run workflow normally
-            //workflow.run();
+            workflow.run();
 
             // Run workflow in streaming mode
-            workflow.runStream(node -> {
-                System.out.println("Processing node: " + node.getName());
-            });
+            //workflow.runStream(node -> {
+            //    System.out.println("Processing node: " + node.getName());
+            //});
 
             // Print transitions
             String transitions = workflow.prettyTransitions();
             System.out.println("Transitions: \n");
             System.out.println(transitions);
 
-            // Dot format generated
-            System.out.println(workflow.generateDotFormat());
-
             // Generate workflow image
-            workflow.generateWorkflowImage("workflow.svg");
+            workflow.generateWorkflowImage("image/my-workflow.svg");
+            // workflow.generateWorkflowImage();
         }
 }

@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+      branches:
+      - main
+  pull_request:
+      branches:
+      - main
+
+jobs:
+  java_build:
+    strategy:
+      matrix:
+          java: [17, 21, 23]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with JDK ${{ matrix.java_version }}
+        run: mvn -B clean test ${{ matrix.included_modules }} -Dmaven.javadoc.skip=true
+
