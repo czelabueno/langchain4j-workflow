@@ -22,6 +22,11 @@ jobs:
           java-version: ${{ matrix.java_version }}
           distribution: 'temurin'
           cache: maven
-      - name: Build with JDK ${{ matrix.java_version }}
-        run: mvn -B clean test ${{ matrix.included_modules }} -Dmaven.javadoc.skip=true
+      - name: Build and test with JDK ${{ matrix.java_version }}
+        run: mvn -B -U -T4C clean test ${{ matrix.included_modules }} -Dmaven.javadoc.skip=true surefire-report:report
+      - name: Upload Surefire Reports with JDK ${{ matrix.java_version }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/*.xml'
 
