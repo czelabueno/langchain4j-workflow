@@ -1,6 +1,6 @@
-package dev.langchain4j.workflow.graph;
+package com.github.czelabueno.jai.workflow.graph;
 
-import dev.langchain4j.workflow.transition.Transition;
+import com.github.czelabueno.jai.workflow.transition.Transition;
 import lombok.NonNull;
 
 import java.io.IOException;

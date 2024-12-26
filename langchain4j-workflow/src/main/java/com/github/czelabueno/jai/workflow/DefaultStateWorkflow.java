@@ -1,10 +1,10 @@
-package dev.langchain4j.workflow;
+package com.github.czelabueno.jai.workflow;
 
-import dev.langchain4j.workflow.graph.GraphImageGenerator;
-import dev.langchain4j.workflow.graph.graphviz.GraphvizImageGenerator;
-import dev.langchain4j.workflow.transition.Transition;
-import dev.langchain4j.workflow.node.Conditional;
-import dev.langchain4j.workflow.node.Node;
+import com.github.czelabueno.jai.workflow.node.Conditional;
+import com.github.czelabueno.jai.workflow.node.Node;
+import com.github.czelabueno.jai.workflow.transition.Transition;
+import com.github.czelabueno.jai.workflow.graph.GraphImageGenerator;
+import com.github.czelabueno.jai.workflow.graph.graphviz.GraphvizImageGenerator;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;

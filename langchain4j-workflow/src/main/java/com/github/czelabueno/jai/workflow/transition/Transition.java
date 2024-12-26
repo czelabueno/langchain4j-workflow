@@ -1,7 +1,7 @@
-package dev.langchain4j.workflow.transition;
+package com.github.czelabueno.jai.workflow.transition;
 
-import dev.langchain4j.workflow.node.Node;
-import dev.langchain4j.workflow.WorkflowStateName;
+import com.github.czelabueno.jai.workflow.node.Node;
+import com.github.czelabueno.jai.workflow.WorkflowStateName;
 import lombok.Getter;
 import lombok.NonNull;
 

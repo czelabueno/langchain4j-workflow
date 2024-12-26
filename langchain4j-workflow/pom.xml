@@ -2,16 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-workflow-parent</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../langchain4j-workflow-parent/pom.xml</relativePath>
+        <groupId>com.github.czelabueno</groupId>
+        <artifactId>jai-workflow-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>langchain4j-workflow</artifactId>
-    <name>LangChain4j::Workflow</name>
+    <name>JavAI Workflow :: LangChain4j</name>
     <url>https://github.com/czelabueno/langchain4j-workflow</url>
-    <description>Build advanced agentic java AI applications based on flexible workflows</description>
+    <description>jAI Workflow: Build advanced agentic java AI applications based on LangChain4j</description>
 
     <dependencies>
         <dependency>

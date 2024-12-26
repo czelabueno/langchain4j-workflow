@@ -1,4 +1,4 @@
-package dev.langchain4j.workflow.node;
+package com.github.czelabueno.jai.workflow.node;
 
 import org.junit.jupiter.api.Test;
 

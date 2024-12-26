@@ -1,7 +1,7 @@
-package dev.langchain4j.workflow;
+package com.github.czelabueno.jai.workflow;
 
-import dev.langchain4j.workflow.node.Conditional;
-import dev.langchain4j.workflow.node.Node;
+import com.github.czelabueno.jai.workflow.node.Conditional;
+import com.github.czelabueno.jai.workflow.node.Node;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

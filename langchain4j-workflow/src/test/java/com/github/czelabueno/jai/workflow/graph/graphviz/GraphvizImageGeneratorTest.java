@@ -1,6 +1,6 @@
-package dev.langchain4j.workflow.graph.graphviz;
+package com.github.czelabueno.jai.workflow.graph.graphviz;
 
-import dev.langchain4j.workflow.transition.Transition;
+import com.github.czelabueno.jai.workflow.transition.Transition;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

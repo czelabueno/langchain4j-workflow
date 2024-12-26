@@ -1,4 +1,4 @@
-name: release
+name: jAI Workflow Release
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ jobs:
         - name: Set up JDK 21
           uses: actions/setup-java@v4
           with:
-             java-version: '17'
+             java-version: '21'
              distribution: 'temurin'
              cache: maven
              server-id: ossrh
@@ -22,12 +22,8 @@ jobs:
              gpg-passphrase: GPG_PASSPHRASE
 
         - name: release
-          run: mvn -B -Psign clean deploy -DskipTests
+          run: mvn -B -U -Prelease clean deploy -DskipTests
           env:
              GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
              OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
              OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        - name: tag the release
-          run: |
-            git tag -a v${{ steps.get_version.outputs.version }} -m "Release version v${{ steps.get_version.outputs.version }}"
-            git push origin v${{ steps.get_version.outputs.version }}

@@ -1,8 +1,8 @@
-package dev.langchain4j.workflow;
+package com.github.czelabueno.jai.workflow;
 
-import dev.langchain4j.workflow.node.Conditional;
-import dev.langchain4j.workflow.node.Node;
-import dev.langchain4j.workflow.transition.Transition;
+import com.github.czelabueno.jai.workflow.node.Conditional;
+import com.github.czelabueno.jai.workflow.node.Node;
+import com.github.czelabueno.jai.workflow.transition.Transition;
 
 import java.io.IOException;
 import java.util.List;
