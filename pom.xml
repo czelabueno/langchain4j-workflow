@@ -204,12 +204,14 @@
       </activation>
       <modules>
         <module>jai-workflow-core</module>
+        <module>langchain4j-workflow</module>
       </modules>
     </profile>
     <profile>
       <id>release</id>
       <modules>
         <module>jai-workflow-core</module>
+        <module>langchain4j-workflow</module>
       </modules>
       <distributionManagement>
         <snapshotRepository>
@@ -265,6 +267,12 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <configuration>
+                  <gpgArguments>
+                    <argument>--pinentry-mode</argument>
+                    <argument>loopback</argument>
+                  </gpgArguments>
+                </configuration>
               </execution>
             </executions>
           </plugin>
