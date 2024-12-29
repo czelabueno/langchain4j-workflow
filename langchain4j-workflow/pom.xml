@@ -5,7 +5,6 @@
         <groupId>com.github.czelabueno</groupId>
         <artifactId>jai-workflow-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>langchain4j-workflow</artifactId>
@@ -15,7 +14,7 @@
         <dependency>
             <groupId>com.github.czelabueno</groupId>
             <artifactId>jai-workflow-core</artifactId>
-            <version>${revision}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

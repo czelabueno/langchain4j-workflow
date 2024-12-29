@@ -7,7 +7,7 @@ import java.util.List;
 
 import static dev.langchain4j.internal.ValidationUtils.ensureNotNull;
 
-public interface AiWorkflow {
+public interface JAiWorkflow {
 
     default String answer(String question){
         ensureNotNull(question, "question");

@@ -3,7 +3,7 @@ package com.github.czelabueno.jai.workflow.langchain4j.internal;
 import com.github.czelabueno.jai.workflow.DefaultStateWorkflow;
 import com.github.czelabueno.jai.workflow.StateWorkflow;
 import com.github.czelabueno.jai.workflow.langchain4j.AbstractStatefulBean;
-import com.github.czelabueno.jai.workflow.langchain4j.AiWorkflow;
+import com.github.czelabueno.jai.workflow.langchain4j.JAiWorkflow;
 import com.github.czelabueno.jai.workflow.node.Node;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -18,9 +18,9 @@ import java.util.List;
 import static dev.langchain4j.internal.Utils.getOrDefault;
 import static dev.langchain4j.internal.ValidationUtils.ensureNotNull;
 
-class DefaultAiWorkflow<T extends AbstractStatefulBean> implements AiWorkflow {
+class DefaultJAiWorkflow<T extends AbstractStatefulBean> implements JAiWorkflow {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultAiWorkflow.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultJAiWorkflow.class);
 
     private final Boolean runStream;
     private final Boolean generateWorkflowImage;
@@ -30,11 +30,11 @@ class DefaultAiWorkflow<T extends AbstractStatefulBean> implements AiWorkflow {
     private DefaultStateWorkflow<T> workflow;
 
     @Builder
-    public DefaultAiWorkflow(T statefulBean,
-                             List<Node<T,T>> nodes,
-                             Boolean runStream,
-                             Boolean generateWorkflowImage,
-                             Path workflowImageOutputPath) {
+    public DefaultJAiWorkflow(T statefulBean,
+                              List<Node<T,T>> nodes,
+                              Boolean runStream,
+                              Boolean generateWorkflowImage,
+                              Path workflowImageOutputPath) {
         this.runStream = getOrDefault(runStream, false);
         // check if workflowOutputPath is valid
         this.generateWorkflowImage = workflowImageOutputPath != null || getOrDefault(generateWorkflowImage, false);
