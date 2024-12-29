@@ -4,8 +4,7 @@ import com.github.czelabueno.jai.workflow.WorkflowStateName;
 import com.github.czelabueno.jai.workflow.node.Node;
 import com.github.czelabueno.jai.workflow.transition.Transition;
 import com.github.czelabueno.jai.workflow.graph.GraphImageGenerator;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,7 @@ public class GraphvizImageGenerator implements GraphImageGenerator {
         }
         // Generate image using Graphviz from dot format
         log.debug("Generating workflow image..");
+        Graphviz.useEngine(new GraphvizJdkEngine());
         log.debug("Using default image format: " + DEFAULT_IMAGE_FORMAT);
         if (dotFormat == null) {
             if (transitions == null || transitions.isEmpty()) {

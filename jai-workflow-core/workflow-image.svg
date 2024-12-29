@@ -1,0 +1,45 @@
+<svg width="176px" height="152px"
+ viewBox="0.00 0.00 176.24 152.11" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.0 1.0) rotate(0.0) translate(4.0 148.11)">
+<title>workflow</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-148.11 172.24,-148.11 172.24,4 -4,4"/>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<ellipse fill="lightgrey" stroke="black" cx="39.12" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="39.12" y="-13.8" font-family="Times,serif" font-size="14.00">A</text>
+</g>
+<!-- B -->
+<g id="node2" class="node">
+<title>B</title>
+<ellipse fill="lightgrey" stroke="black" cx="141.24" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="141.24" y="-13.8" font-family="Times,serif" font-size="14.00">B</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge1" class="edge">
+<title>A&#45;&gt;B</title>
+<path fill="none" stroke="black" d="M66.16,-18C77.66,-18 91.37,-18 103.85,-18"/>
+<polygon fill="black" stroke="black" points="103.98,-21.5 113.98,-18 103.98,-14.5 103.98,-21.5"/>
+</g>
+<!-- start -->
+<g id="node3" class="node">
+<title>start</title>
+<polygon fill="orange" stroke="black" points="39.12,-90 -0.12,-72 39.12,-54 78.36,-72 39.12,-90"/>
+<polyline fill="none" stroke="black" points="10.79,-77 10.79,-67 "/>
+<polyline fill="none" stroke="black" points="28.21,-59 50.03,-59 "/>
+<polyline fill="none" stroke="black" points="67.45,-67 67.45,-77 "/>
+<polyline fill="none" stroke="black" points="50.03,-85 28.21,-85 "/>
+<text text-anchor="middle" x="39.12" y="-67.8" font-family="Times,serif" font-size="14.00">start</text>
+</g>
+<!-- end -->
+<g id="node4" class="node">
+<title>end</title>
+<polygon fill="lightgreen" stroke="black" points="57.33,-144.22 20.9,-144.22 20.9,-107.78 57.33,-107.78 57.33,-144.22"/>
+<polyline fill="none" stroke="black" points="32.9,-144.22 20.9,-132.22 "/>
+<polyline fill="none" stroke="black" points="20.9,-119.78 32.9,-107.78 "/>
+<polyline fill="none" stroke="black" points="45.33,-107.78 57.33,-119.78 "/>
+<polyline fill="none" stroke="black" points="57.33,-132.22 45.33,-144.22 "/>
+<text text-anchor="middle" x="39.12" y="-121.8" font-family="Times,serif" font-size="14.00">end</text>
+</g>
+</g>
+</svg>

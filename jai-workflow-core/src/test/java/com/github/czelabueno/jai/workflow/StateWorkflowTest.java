@@ -145,7 +145,6 @@ class StateWorkflowTest {
         assertThat(transitions).containsPattern("node\\d+ -> node\\d+");
     }
 
-    @Disabled
     @SneakyThrows(IOException.class)
     @Test
     void should_generate_workflow_image() {
