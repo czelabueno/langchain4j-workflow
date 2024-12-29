@@ -1,40 +1,94 @@
-# LangChain4j Workflow 🦜🔀
+# JavAI Workflow 🦜🔀: Build programmatically custom agentic workflows, AI Agents, RAG systems for java
+[![Build Status](https://github.com/czelabueno/langchain4j-workflow/actions/workflows/ci.yaml/badge.svg)](https://github.com/czelabueno/langchain4j-workflow/actions/workflows/ci.yaml)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/dev.langchain4j/langchain4j-workflow/badge.svg)](https://maven-badges.herokuapp.com/maven-central/dev.langchain4j/langchain4j-workflow)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Build advanced java applications with AI based on flexible stateful workflows 💡
+An open-source Java library to build, package, integrate, orchestrate and monitor agentic AI systems for java developers 💡
+
+![Workflow Image](docs/jai-worflow-anatomy.png)
+
+> 🌟 **Starring me**: If you find this repository beneficial, don't forget to give it a star! 🌟 It's a simple way to show your appreciation and help this project grow!
 
 ## Overview
-LangChain4j Workflow is a dynamic, stateful workflow engine crafted as a Java library, drawing inspiration from graph network libraries. It empowers developers with granular control over the flow and state of their applications. This engine is a game-changer for building sophisticated AI applications, such as RAG-based approaches using modern paradigms and agent architectures, where the application's flow and state are pivotal. It enables the crafting of custom behavior, leading to a significant reduction in hallucinations and an increase in response reliability
+JavAI Workflow (named initially Langchain4j-workflow) is a dynamic, stateful workflow engine crafted as a Java library. It empowers java developers with granular control over the orchestrated workflows as a graph, iteratively, with cycles, flexibility, control, and conditional decisions. This engine is a game-changer for building sophisticated AI applications, such as multiples RAG-based approaches using modern paradigms and agent architectures. It enables the crafting of custom behavior, leading to a significant reduction in hallucinations and an increase in response reliability.
 
-LangChain4j Workflow is influenced by [LangGraph](https://langchain-ai.github.io/langgraph/tutorials/introduction/), [Graphviz](https://graphviz.gitlab.io/Gallery/directed/) and [Apache Beam](https://beam.apache.org/), and it offers a multitude of benefits. It allows you to define custom workflows as a graph, iteratively, with cycles, flexibility, control, and conditional decisions. These benefits are indispensable for building advanced AI applications.
+jAI Workflow is influenced by [LangFlow](https://github.com/langflow-ai/langflow), [LangGraph](https://langchain-ai.github.io/langgraph/tutorials/introduction/), [Graphviz](https://graphviz.gitlab.io/Gallery/directed/).
 
-LangChain4j Workflow is designed to integrate seamlessly with [LangChain4j](https://docs.langchain4j.dev/), enabling you to define custom workflows using all the features that LangChain4j offers. This integration could provide a comprehensive toolset for building advanced AI applications.
+## Principles:
+- **Java-based** jAI workflows are configuration as code (java) and agnostic to AI models, enabling you can define custom advanced and dynamic workflows just writing Java code.
+- **Stateful**: jAI Workflow is a stateful engine, enabling you to design custom states as POJO and transitions. This feature provides a robust foundation for managing the flow and state of your application.
+- **Graph-Based**: The workflow is graph-based, offering the flexibility to define custom workflows with multiple directions such as one-way, round trip, loop, recursive and more. This feature allows for intricate control over the flow of your application.
+- **Flexible**: jAI Workflow is designed with flexibility in mind. You can define custom workflows, modules or agents to build RAG systems as LEGO-like. A module can be decoupled and integrated in any other workflow.
+- **Ecosystem integration**: jAI workflow will be integrated with any java AI project. It provides a comprehensive toolset for building advanced java AI applications.
+- **Publish as API**: jAI Workflow can be published as an API as entrypoint once you have defined your custom workflow. This feature allows you to expose your workflow as a service.
+- **Observability**: jAI Workflow provides observability features to monitor the execution of the workflow, trace inputs and outputs, and debug the flow of your application.
+- **Scalable**: jAI Workflow can be deployed as any java project as standalone or distributed mode as containers in any cloud provider or kubernetes environment. Each module can run in a different JVM env or container for scalability in production environments.
 
-> 🌟 **Starring me**: If you find this repository beneficial, don't forget to give it a star! 🌟 Your support increases its chances of being merged with the LangChain4j codebase. It's a simple way to show your appreciation and help this project grow!
-
-## Key Features
-- **Stateful**: LangChain4j Workflow is a stateful engine, enabling you to design custom states as POJO and transitions. This feature provides a robust foundation for managing the flow and state of your application.
-- **Graph-Based**: The workflow is graph-based, offering the flexibility to define custom workflows with multiple directions such as one-way, round trip, cyclic, and more. This feature allows for intricate control over the flow of your application.
-- **Flexible**: LangChain4j Workflow is designed with flexibility in mind. You can define custom workflows and append them at any point in other RAG paradigms, such as Modular RAG. This flexibility allows for a high degree of customization.
-- **Iterative**: The engine supports the implementation of loops and conditionals in your custom workflows. This feature allows for complex logic and flow control within your workflows.
-- **Streaming Support**: LangChain4j Workflow supports streaming outputs as they are produced by each node. This feature allows for real-time processing and response in your application.
-- **Integration**: LangChain4j Workflow is designed to integrate seamlessly with [LangChain4j](https://docs.langchain4j.dev/), enabling you to define custom workflows using all the features that LangChain4j offers. This integration provides a comprehensive toolset for building advanced AI applications.
+## 🚀 Features
+### v.0.2.0 Features
+- **Graph-core**: The engine supports create `Nodes`, `Conditional Nodes`, `Edges`, and workflows as a graph. This feature allows you to define custom workflows with multiple `Transitions` between nodes such as one-way, round trip and recursive. 
+- **Run workflow**: jAI Workflow supports synchronized `workflow.run()` and streaming `worflow.runStream()` runs the outputs as they are produced by each node. This last feature allows for real-time processing and response in your application.
+- **Integration**: [LangChain4j](https://docs.langchain4j.dev/) integration, enabling you to define custom workflows using all the features that LangChain4j offers. This integration provides a comprehensive toolset for building advanced AI applications to integrate with multiple LLM providers and models.
 - **Visualization**: The engine supports the generation of workflow images. This feature allows you to visualize the flow computed of your app workflow. By Default it uses `Graphhviz` lib to generate the image, but you implement your own image generator on `GraphImageGenerator.java` interface.
+### Q1 2025 Features
+- **Graph-Core**:
+  - Split Nodes
+  - Merge Nodes
+  - Parallel transitions
+  - Human-in-the-loop
+- **Modular (Group of nodes)**:
+  - Module
+  - Remote Module
+- **Integration**:
+  - Model Context Protocol (MCP) integration as server and client.
+  - Define remote module as MCP server.
+- **Observability**:
+  - OpenTelemetry integration (metrics and traces).
+  - Debugging mode logging structure.
+### 🗺️ Future Features
+- **Deployment Model**:
+  - Dockerize workflow
+  - Kubernetes deployment
+  - Cloud deployment
+- **API**:
+  - Publish workflow as API (SSE for streaming runs and REST for sync runs).
+- **Playground**:
+  - Web-based playground to add, test and run jAI workflows APIs.
+  - Chatbot Q&A viewer.
+  - Graph tracing visualization for debugging
 
-## Installation
-```shell
-mvn clean package install
-```
-## Example
-In **LangChain4j Workflow**, the notion of state plays a pivotal role. Every execution of the graph initiates a state, which is then transferred among the nodes during their execution. Each node, after its execution, updates this internal state with its own return value. The method by which the graph updates its internal state is determined by user-defined functions.
+## Architecture
+jAI Workflow is designed with a modular architecture, enabling you to define custom workflows, modules, or agents to build RAG systems as LEGO-like. A module can be decoupled and integrated into any other workflow.
 
-Add the following dependency to your `pom.xml` file:
+### Standalone Architecture
+![Standalone Architecture](docs/jai-standalone-architecture.png)
+
+### Distributed Architecture
+![Desired Architecture](docs/jai-distributed-architecture.png)
+
+> 📖 Full documentation will be available soon
+
+## 💡How to use in your Java project
+In **jAI Workflow**, the notion of state plays a pivotal role. Every execution of the graph initiates a state, which is then transferred among the nodes during their execution. Each node, after its execution, updates this internal state with its own return value. The method by which the graph updates its internal state is determined by user-defined functions.
+
+The simplest way to use jAI Workflow in your project is with the [LangChain4j](https://docs.langchain4j.dev) integration because enables you to define custom workflows using all the features that LangChain4j offers. This integration could provide a comprehensive toolset for building advanced AI applications:
 ```xml
 <dependency>
-  <groupId>dev.langchain4j</groupId>
+  <groupId>com.github.czelabueno</groupId>
   <artifactId>langchain4j-workflow</artifactId>
-  <version>0.1.0</version> <!--Change to the latest version-->
+  <version>0.2.0</version> <!--Change to the latest version-->
 </dependency>
 ```
+
+If you would want to use jAI workflow without LangChain4j or with other framework, add the following dependency to your `pom.xml` file:
+```xml
+<dependency>
+  <groupId>com.github.czelabueno</groupId>
+  <artifactId>jai-workflow-core</artifactId>
+  <version>0.2.0</version> <!--Change to the latest version-->
+</dependency>
+```
+### Example
 Define a stateful bean with fields that will be used to store the state of the workflow:
 ```java
 // Define a stateful bean
@@ -150,11 +204,17 @@ You can print all computed transitions:
 START -> node1 -> node2 -> node3 -> node2 -> node3 -> node4 -> END
 ```
 You can generate a workflow image with all computed transitions:
-
-![Workflow Image](image/my-workflow.svg)
+```shell
+> image/
+> ├── my-workflow.svg
+```
+![Workflow Image](jai-workflow-core/image/my-workflow.svg)
 
 ## LLM examples
-You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository. Please note that examples can be modified and more examples will be added over time.
+You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository where show you how-to implement multiple RAG patterns, agent architectures and AI papers using LangChain4j and jAI Workflow. 
+
+> Please note that examples can be modified and more examples will be added over time.
+
 ### MoA
 - **Mixture-of-Agents (MoA)**:
   - Java example: [`langchain4j-moa`](https://github.com/czelabueno/langchain4j-workflow-examples/tree/main/langchain4j-moa)
@@ -185,9 +245,9 @@ You can check all examples in the [langchain4j-worflow-examples](https://github.
   - Java example: _Very soon_
   - Based on Paper: https://arxiv.org/pdf/2305.04091
 
-## Contribute & feedback
+## 💬 Contribute & feedback
 If you have any feedback, suggestions, or want to contribute, please feel free to open an issue or a pull request. We are open to new ideas and suggestions.
-Help us to maturity this project and make it more useful for the community in order to merge it with LangChain4j source code.
+Help us to maturity this project and make it more useful for the java community.
 
-## Authors
-- Carlos Zela [@c_zela](https://x.com/c_zela)
+## 🧑🏻‍💻 Authors
+- Carlos Zela [@c_zela](https://x.com/c_zela) [czelabueno](https://linkedin.com/in/czelabueno)
