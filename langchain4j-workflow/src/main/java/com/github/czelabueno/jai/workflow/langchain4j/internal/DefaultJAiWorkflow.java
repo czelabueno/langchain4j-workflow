@@ -75,7 +75,7 @@ class DefaultAiWorkflow<T extends AbstractStatefulBean> implements AiWorkflow {
                 } else {
                     workflow().generateWorkflowImage();
                 }
-            } catch (IOException e) {
+            } catch (IOException e) { // Generate image is not blocking the workflow execution
                 log.error("Error generating workflow image", e);
             }
         }
