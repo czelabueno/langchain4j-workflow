@@ -92,7 +92,7 @@ The simplest way to use jAI Workflow in your project is with the [LangChain4j](h
 ```xml
 <dependency>
   <groupId>com.github.czelabueno</groupId>
-  <artifactId>langchain4j-workflow</artifactId>
+  <artifactId>jai-workflow-langchain4j</artifactId>
   <version>0.2.0</version> <!--Change to the latest version-->
 </dependency>
 ```

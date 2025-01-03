@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>langchain4j-workflow</artifactId>
+    <artifactId>jai-workflow-langchain4j</artifactId>
     <name>JavAI Workflow :: LangChain4j</name>
 
     <properties>
