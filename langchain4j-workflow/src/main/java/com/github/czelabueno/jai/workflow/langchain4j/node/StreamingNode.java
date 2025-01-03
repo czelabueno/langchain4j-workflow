@@ -121,12 +121,11 @@ public class StreamingNode<T extends AbstractStatefulBean> extends Node<T, Flux<
             StreamingChatLanguageModel streamingChatLanguageModel) {
         Sinks.Many<String> sink = Sinks.many().unicast().onBackpressureBuffer();
         CompletableFuture<AiMessage> futureResponse = new CompletableFuture<>();
-        messages = getOrDefault(
-                messages,
-                doUserMessage != null
-                        ? Arrays.asList(doUserMessage.apply(statefulBean))
-                        : Arrays.asList(UserMessage.from(statefulBean.getQuestion()))
-        );
+        if (messages == null || messages.isEmpty()) {
+            messages = doUserMessage != null ?
+                    List.of(doUserMessage.apply(statefulBean)) :
+                    List.of(UserMessage.from(getOrDefault(statefulBean.getQuestion(),"No question provided.")));
+        }
 
         streamingChatLanguageModel.generate(
                 messages,
