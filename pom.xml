@@ -152,7 +152,7 @@
 
   <modules>
     <module>jai-workflow-core</module>
-    <module>langchain4j-workflow</module>
+    <module>jai-workflow-langchain4j</module>
   </modules>
 
   <!-- Add necessary plugins for Maven Central deployment -->
@@ -314,14 +314,14 @@
       </activation>
       <modules>
         <module>jai-workflow-core</module>
-        <module>langchain4j-workflow</module>
+        <module>jai-workflow-langchain4j</module>
       </modules>
     </profile>
     <profile>
       <id>release</id>
       <modules>
         <module>jai-workflow-core</module>
-        <module>langchain4j-workflow</module>
+        <module>jai-workflow-langchain4j</module>
       </modules>
       <distributionManagement>
         <repository>
