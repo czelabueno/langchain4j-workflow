@@ -7,6 +7,7 @@ import lombok.NonNull;
 /**
  * Represents a transition between two states in a workflow.
  * The states can be instances of {@link Node} or {@link WorkflowStateName}.
+ *
  */
 public record Transition(TransitionState from, TransitionState to) {
 
