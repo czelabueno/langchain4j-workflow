@@ -25,8 +25,10 @@ jobs:
         run: |
           mvn -B --fail-at-end \
             -DskipTests -DskipITs \
-            clean deploy
+            clean package
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      - name: Print settings.xml
+        run: cat /home/runner/.m2/settings.xml
