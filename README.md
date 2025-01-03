@@ -1,4 +1,4 @@
-# JavAI Workflow 🦜🔀: Build programmatically custom agentic workflows, AI Agents, RAG systems for java
+# JavAI Workflow 🦜🔂☕: Build programmatically custom agentic workflows, AI Agents, RAG systems for java
 [![Build Status](https://github.com/czelabueno/langchain4j-workflow/actions/workflows/ci.yaml/badge.svg)](https://github.com/czelabueno/langchain4j-workflow/actions/workflows/ci.yaml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/dev.langchain4j/langchain4j-workflow/badge.svg)](https://maven-badges.herokuapp.com/maven-central/dev.langchain4j/langchain4j-workflow)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -6,6 +6,20 @@
 An open-source Java library to build, package, integrate, orchestrate and monitor agentic AI systems for java developers 💡
 
 ![Workflow Image](docs/jai-worflow-anatomy.png)
+<details>
+  <summary>Node, Module, and Workflow Definitions</summary>
+
+### Node
+A `Node` represents a single unit of work within the workflow. It encapsulates a specific function or task that processes the stateful bean and updates it. Nodes can be synchronous or asynchronous (streaming).
+
+### Module
+A `Module` is a collection of nodes grouped together to perform a higher-level function. Modules can be reused across different workflows, providing modularity and reusability.
+
+### Workflow
+A `Workflow` is a directed graph of nodes, modules and edges that defines the sequence of operations to be performed. It manages the state transitions and execution flow, ensuring that each node processes the stateful bean in the correct order.
+
+</details>
+
 
 > 🌟 **Starring me**: If you find this repository beneficial, don't forget to give it a star! 🌟 It's a simple way to show your appreciation and help this project grow!
 
@@ -42,20 +56,23 @@ jAI Workflow is influenced by [LangFlow](https://github.com/langflow-ai/langflow
 - **Integration**:
   - Model Context Protocol (MCP) integration as server and client.
   - Define remote module as MCP server.
-- **Observability**:
-  - OpenTelemetry integration (metrics and traces).
-  - Debugging mode logging structure.
+- **API**:
+  - Publish workflow as API (SSE for streaming runs and REST for sync runs).
 ### 🗺️ Future Features
 - **Deployment Model**:
   - Dockerize workflow
   - Kubernetes deployment
   - Cloud deployment
-- **API**:
-  - Publish workflow as API (SSE for streaming runs and REST for sync runs).
+- **Observability**:
+  - OpenTelemetry integration (metrics and traces).
+  - Debugging mode logging structure.
 - **Playground**:
   - Web-based playground to add, test and run jAI workflows APIs.
   - Chatbot Q&A viewer.
   - Graph tracing visualization for debugging
+  - 
+  ![jai-workflow-playground-prototype](docs/jai-workflow-playground.gif)
+  > _This is a prototype, the final version will be available soon. Open an issue if you want to share your ideas or contribute to this feature._
 
 ## Architecture
 jAI Workflow is designed with a modular architecture, enabling you to define custom workflows, modules, or agents to build RAG systems as LEGO-like. A module can be decoupled and integrated into any other workflow.
@@ -88,93 +105,105 @@ If you would want to use jAI workflow without LangChain4j or with other framewor
   <version>0.2.0</version> <!--Change to the latest version-->
 </dependency>
 ```
-### Example
+### langChain4j-workflow example
 Define a stateful bean with fields that will be used to store the state of the workflow:
 ```java
 // Define a stateful bean
-public class MyStatefulBean {
-  int value = 0;
+public class MyStatefulBean extends AbstractStatefulBean {
+  private List<String> relevantDocuments;
+  private String webSearchResponse;
+  // other fields you need
 }
 ```
-
-Create a simple workflow with 4 nodes and conditional edges:
+Define functions that determines statefulBean state. To simplify this, you can use a java class with static methods:
+```java
+public class MyStatefulBeanFunctions {
+  public static MyStatefulBean searchWeb(MyStatefulBean statefulBean) {
+    // This is a simple example, you can use LangChain4j to search the web using any WebSearchEngine.
+    statefulBean.webSearchResponse = "Web search response";
+    return statefulBean;
+  };
+  public static MyStatefulBean extractRelevantDocuments(MyStatefulBean statefulBean, String... uris) {
+    // This is a simple example, you can use LangChain4j to extract relevant content of the URIs using any RAG pattern.  
+    statefulBean.relevantDocuments = Arrays.asList("Relevant Content 1", "Relevant Content 2");
+    return statefulBean;
+  };
+  public static UserMessage generateUserMessageUsingPrompt(MyStatefulBean statefulBean) {
+    return UserMessage.from(answerPrompt(statefulBean).text());
+  }
+  private static Prompt answerPrompt(MyStatefulBean statefulBean) {
+    String question = statefulBean.getQuestion();
+    String context = String.join("\n\n", statefulBean.getRelevantDocuments());
+    MyStructuredPrompt generateAnswerPrompt = new MyStructuredPrompt(question, context);
+    return StructuredPromptProcessor.toPrompt(generateAnswerPrompt);
+  }
+}
+```
+Create a simple workflow with 3 nodes and conditional edges:
 ```java
 public class Example {
   public static void main(String[] args) {
     
     MyStatefulBean myStatefulBean = new MyStatefulBean();
-
-    // Define functions that determines statefulBean state
-    Function<MyStatefulBean, String> node1Func = obj -> {
-      obj.value +=1;
-      System.out.println("Node 1: [" + obj.value + "]");
-      return "Node1: function proceed";
+    String[] documents = new String[]{
+            "https://lilianweng.github.io/posts/2023-06-23-agent/",
+            "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/"
     };
-    Function<MyStatefulBean, String> node2Func = obj -> {
-      obj.value +=2;
-      System.out.println("Node 2: [" + obj.value + "]");
-      return "Node2: function proceed";
-    };
-    Function<MyStatefulBean, String> node3Func = obj -> {
-      obj.value +=3;
-      System.out.println("Node 3: [" + obj.value + "]");
-      return "Node3: function proceed";
-    };
-    Function<MyStatefulBean, String> node4Func = obj -> {
-      obj.value +=4;
-      System.out.println("Node 4: [" + obj.value + "]");
-      return "Node4: function proceed";
-    };
-
+    
+    StreamingChatLanguageModel streamingModel = MistralAiStreamingChatModel.builder()
+            .apiKey(System.getenv("MISTRAL_AI_API_KEY"))
+            .modelName(MistralAiChatModelName.MISTRAL_LARGE_LATEST)
+            .temperature(0.0)
+            .build();
+    
     // Create the nodes and associate them with the functions to be used during execution.
-    Node<MyStatefulBean, String> node1 = Node.from("node1", node1Func);
-    Node<MyStatefulBean, String> node2 = Node.from("node2", node2Func);
-    Node<MyStatefulBean, String> node3 = Node.from("node3", node3Func);
-    Node<MyStatefulBean, String> node4 = Node.from("node4", node4Func);
-
+    Node<MyStatefulBean, MyStatefulBean> retrieveNode = Node.from(
+            "Retrieve Node", 
+            obj -> MyStatefulBeanFunctions.extractRelevantDocuments(obj, documents));
+    Node<MyStatefulBean, MyStatefulBean> webSearchNode = Node.from(
+            "Web Searching Node", 
+            obj -> MyStatefulBeanFunctions.searchWeb(obj));
+    StreamingNode<MyStatefulBean> generateAnswerNode = StreamingNode.from(
+            "Generation Node",
+            obj -> MyStatefulBeanFunctions.generateUserMessageUsingPrompt(obj),
+            streamingModel);
 
     // Create workflow
-    StateWorkflow<MyStatefulBean> workflow = DefaultStateWorkflow.<MyStatefulBean>builder() 
-            .statefulBean(myStatefulBean)
-            .addNodes(Arrays.asList(node1, node2, node3))
+    DefaultJAiWorkflow<MyStatefulBean> workflow = DefaultJAiWorkflow.<MyStatefulBean>builder()
+            .statefulBean(statefulBean)
+            .runStream(true)
+            .nodes(Arrays.asList(retrieveNode, webSearchNode, generateAnswerNode))
             .build();
 
+    StateWorkflow stateWorkflow = workflow.workflow();
+    
     // You can add more nodes after workflow build. E.g. node4
-    workflow.addNode(node4);
+    stateWorkflow.addNode(node4);
 
     // Define edges
-    workflow.putEdge(node1, node2);
-    workflow.putEdge(node2, node3);
+    stateWorkflow.putEdge(retrieveNode, webSearchNode);
     // Conditional edge
-    workflow.putEdge(node3, Conditional.eval(obj -> {
-      System.out.println("Stateful Value [" + obj.value + "]");
-      if (obj.value > 6) {
-        return node4;
+    stateWorkflow.putEdge(webSearchNode, Conditional.eval(obj -> {
+      if (obj.webSearchResponse != null) {
+        return generateAnswerNode;
       } else {
-        return node2;
+        return retrieveNode;
       }
     }));
-    workflow.putEdge(node4, WorkflowStateName.END);
+    stateWorkflow.putEdge(generateAnswerNode, WorkflowStateName.END);
 
     // Define which node to start
-    workflow.startNode(node1);
+    stateWorkflow.startNode(retrieveNode);
 
-    // Run workflow normally
-    workflow.run();
-    // OR
-    // Run workflow in streaming mode
-    workflow.runStream(node -> {
-      System.out.println("Processing node: " + node.getName());
-    });
+    // Start conversation with the workflow in streaming mode
+    String question = "Summarizes the importance of building agents with LLMs";
+    Flux<String> tokens = workflow.answerStream(question);
+    tokens.subscribe(System.out::println);
 
     // Print all computed transitions
-    String transitions = workflow.prettyTransitions();
+    String transitions = stateWorkflow.prettyTransitions();
     System.out.println("Transitions: \n");
     System.out.println(transitions);
-
-    // Generate workflow image
-    workflow.generateWorkflowImage("image/my-workflow.svg");
-    // workflow.generateWorkflowImage(); // if you use this method, it'll use by default the root path and default image name.
   }
 }
 ```
@@ -182,22 +211,64 @@ Now you can check the output of the workflow execution.
 
 ```shell
 STARTING workflow in stream mode..
-Processing node: node1
-Node 1: [1]
-Processing node: node2
-Node 2: [3]
-Processing node: node3
-Node 3: [6]
-Stateful Value [6]
-Processing node: node2
-Node 2: [8]
-Processing node: node3
-Node 3: [11]
-Stateful Value [11]
-Processing node: node4
-Node 4: [15]
+Processing node: Retrieve Node
+Retrieve Node: processed
+Processing node: Web Searching Node
+Web Searching Node: processed
+Processing node: Retrieve Node
+Retrieve Node: processed
+Processing node: Web Searching Node
+Web Searching Node: processed
+Processing node: Generation Node
+Generation Node: processed
 Reached END state
 ```
+The LLM answer will be printed by tokens in the console:
+```shell
+Building 
+agen
+ts with 
+LLMs 
+is 
+important 
+for three 
+key reasons. 
+Firstly, 
+LLMs serve as 
+a powerful 
+general problem 
+solver, 
+extending 
+their capabilities 
+beyond 
+just 
+generating text. 
+Secondly, they 
+act as 
+the brain
+ of an 
+autonomous 
+agent system,
+ enabling tasks 
+like planning 
+and task 
+decomposition. 
+Lastly, 
+proof-of-concept 
+demos like 
+AutoGPT 
+and 
+BabyAGI 
+showcase the
+ potential of 
+LLM-powered 
+agents in 
+handling
+ complex 
+tasks
+  efficiently.
+```
+
 You can print all computed transitions:
 
 ```shell
@@ -209,6 +280,8 @@ You can generate a workflow image with all computed transitions:
 > ├── my-workflow.svg
 ```
 ![Workflow Image](jai-workflow-core/image/my-workflow.svg)
+
+Check the full example in the [langchain4j-worflow tests](https://github.com/czelabueno/jai-workflow/blob/main/jai-workflow-core/src/test/java/com/github/czelabueno/jai/workflow/langchain4j/JAiWorkflowIT.java)
 
 ## LLM examples
 You can check all examples in the [langchain4j-worflow-examples](https://github.com/czelabueno/langchain4j-workflow-examples) repository where show you how-to implement multiple RAG patterns, agent architectures and AI papers using LangChain4j and jAI Workflow. 

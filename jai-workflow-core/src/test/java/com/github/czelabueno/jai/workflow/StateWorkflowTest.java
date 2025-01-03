@@ -4,7 +4,6 @@ import com.github.czelabueno.jai.workflow.node.Conditional;
 import com.github.czelabueno.jai.workflow.node.Node;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

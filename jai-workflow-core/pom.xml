@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.czelabueno</groupId>
         <artifactId>jai-workflow-parent</artifactId>
-        <version>${revision}</version>
+        <version>0.2.0</version>
     </parent>
 
     <artifactId>jai-workflow-core</artifactId>

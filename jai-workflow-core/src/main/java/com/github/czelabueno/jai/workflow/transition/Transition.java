@@ -2,15 +2,25 @@ package com.github.czelabueno.jai.workflow.transition;
 
 import com.github.czelabueno.jai.workflow.node.Node;
 import com.github.czelabueno.jai.workflow.WorkflowStateName;
-import lombok.Getter;
 import lombok.NonNull;
 
-@Getter
-public class Transition {
-    private final Object from; // // Can be Node<T,?> or WorflowState
-    private final Object to; // Can be Node<T,?> or WorflowState
+/**
+ * Represents a transition between two states in a workflow.
+ * The states can be instances of {@link Node} or {@link WorkflowStateName}.
+ */
+public record Transition(TransitionState from, TransitionState to) {
 
-    public Transition(@NonNull Object from, @NonNull Object to) {
+    /**
+     * Constructs a Transition with the specified from and to states.
+     *
+     * @param from the starting state of the transition, must be an instance of {@link Node} or {@link WorkflowStateName}
+     * @param to   the ending state of the transition, must be an instance of {@link Node} or {@link WorkflowStateName}
+     * @throws IllegalArgumentException if the from state is {@link WorkflowStateName#END},
+     *                                  if the to state is {@link WorkflowStateName#START},
+     *                                  or if the transition is from {@link WorkflowStateName#START} to {@link WorkflowStateName#END}
+     * @throws NullPointerException if the from or to state is null
+     */
+    public Transition(@NonNull TransitionState from, @NonNull TransitionState to) {
         if (from == WorkflowStateName.END) {
             throw new IllegalArgumentException("Cannot transition from an END state");
         }
@@ -24,10 +34,22 @@ public class Transition {
         this.to = to;
     }
 
-    public static Transition from(Object from, Object to) {
+    /**
+     * Creates a new Transition with the specified from and to states.
+     *
+     * @param from the starting state of the transition, must be an instance of {@link Node} or {@link WorkflowStateName}
+     * @param to   the ending state of the transition, must be an instance of {@link Node} or {@link WorkflowStateName}
+     * @return a new Transition instance
+     */
+    public static Transition from(TransitionState from, TransitionState to) {
         return new Transition(from, to);
     }
 
+    /**
+     * Returns a string representation of the transition.
+     *
+     * @return a string representation of the transition in the format "from -> to"
+     */
     @Override
     public String toString() {
         String transition = "";
