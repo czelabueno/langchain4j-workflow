@@ -1,12 +1,21 @@
 package com.github.czelabueno.jai.workflow.node;
 
+import com.github.czelabueno.jai.workflow.transition.TransitionState;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Objects;
 import java.util.function.Function;
 
-public class Node<T, R> {
+/**
+ * Represents a node in a workflow that executes a function with a given input and produces an output.
+ * <p>
+ * This class implements the {@link TransitionState} interface.
+ *
+ * @param <T> the type of the input to the function. Normally a stateful bean POJO defined by the user.
+ * @param <R> the type of the output from the function. Normally a stateful bean POJO defined by the user.
+ */
+public class Node<T, R> implements TransitionState {
 
     @Getter
     private final String name;
@@ -16,6 +25,14 @@ public class Node<T, R> {
     @Getter
     private R functionOutput;
 
+    /**
+     * Constructs a Node with the specified name and function.
+     *
+     * @param name     the name of the node
+     * @param function the function to execute
+     * @throws IllegalArgumentException if the node name is empty
+     * @throws NullPointerException     if the name or function is null
+     */
     public Node(@NonNull String name, @NonNull Function<T, R> function) {
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("Node name cannot be empty");
@@ -24,6 +41,13 @@ public class Node<T, R> {
         this.function = function;
     }
 
+    /**
+     * Executes the function with the given input and stores the input and output.
+     *
+     * @param input the input to the function
+     * @return the output from the function
+     * @throws IllegalArgumentException if the input is null
+     */
     public R execute(T input) {
         if (input == null) {
             throw new IllegalArgumentException("Function input cannot be null");
@@ -34,6 +58,15 @@ public class Node<T, R> {
         return output;
     }
 
+    /**
+     * Creates a new Node with the specified name and function.
+     *
+     * @param name     the name of the node
+     * @param function the function to execute
+     * @param <T>      the type of the input to the function
+     * @param <R>      the type of the output from the function
+     * @return a new Node instance
+     */
     public static <T, R> Node<T, R> from(String name, Function<T, R> function) {
         return new Node<>(name, function);
     }

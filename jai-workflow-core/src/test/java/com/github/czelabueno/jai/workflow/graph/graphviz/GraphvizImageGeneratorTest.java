@@ -1,5 +1,6 @@
 package com.github.czelabueno.jai.workflow.graph.graphviz;
 
+import com.github.czelabueno.jai.workflow.node.Node;
 import com.github.czelabueno.jai.workflow.transition.Transition;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ class GraphvizImageGeneratorTest {
     }
 
     @Test
-    void test_generateImage_invalid_transitions_and_doFormat() {
+    void test_generateImage_invalid_transitions() {
         // given
         List<Transition> transitions = Collections.EMPTY_LIST;
         // when
@@ -51,7 +52,12 @@ class GraphvizImageGeneratorTest {
     @Test
     void test_generate_Image_invalid_outputPath() {
         // given
-        List<Transition> transitions = Arrays.asList(new Transition("a", "b"));
+        List<Transition> transitions = Arrays.asList(
+                Transition.from(
+                    Node.from("a", s -> s + "1"),
+                    Node.from("b", s -> s + "2")
+                )
+        );
         // when
         GraphvizImageGenerator generator = builder.build();
         // then
@@ -93,7 +99,12 @@ class GraphvizImageGeneratorTest {
     @Test
     void test_generate_Image_with_transition_and_default_dotFormat() {
         // given
-        List<Transition> transitions = Arrays.asList(new Transition("a", "b"));
+        List<Transition> transitions = Arrays.asList(
+                Transition.from(
+                        Node.from("a", s -> s + "1"),
+                        Node.from("b", s -> s + "2")
+                )
+        );
         GraphvizImageGenerator generator = builder.build();
         // when
         assertThat(generator).isNotNull();
@@ -107,7 +118,12 @@ class GraphvizImageGeneratorTest {
     @Test
     void test_generate_Image_is_SVG_format() {
         // given
-        List<Transition> transitions = Arrays.asList(new Transition("a", "b"));
+        List<Transition> transitions = Arrays.asList(
+                Transition.from(
+                        Node.from("a", s -> s + "1"),
+                        Node.from("b", s -> s + "2")
+                )
+        );
         GraphvizImageGenerator generator = builder.build();
         // when
         assertThat(generator).isNotNull();

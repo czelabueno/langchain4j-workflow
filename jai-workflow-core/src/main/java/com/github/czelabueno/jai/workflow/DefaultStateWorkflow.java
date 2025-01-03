@@ -5,6 +5,7 @@ import com.github.czelabueno.jai.workflow.node.Node;
 import com.github.czelabueno.jai.workflow.transition.Transition;
 import com.github.czelabueno.jai.workflow.graph.GraphImageGenerator;
 import com.github.czelabueno.jai.workflow.graph.graphviz.GraphvizImageGenerator;
+import com.github.czelabueno.jai.workflow.transition.TransitionState;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultStateWorkflow.class);
-    private final Map<Node<T,?>, List<Object>> adjList;
+    private final Map<Node<T,?>, List<TransitionState>> adjList;
     private volatile Node<T,?> startNode;
     private final T statefulBean;
     private final List<Transition> transitions;
@@ -83,6 +84,22 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     }
 
     @Override
+    public Node<T, ?> getLastNode() {
+        if (adjList.isEmpty() || adjList == null)
+            throw new IllegalStateException("No nodes added to the workflow");
+
+        return adjList.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().contains(WorkflowStateName.END))
+                .<Node<T, ?>>map(Map.Entry::getKey)
+                .findFirst()
+                .orElseGet(() -> adjList.keySet()
+                        .<Node<T, ?>>stream()
+                        .reduce((first, second) -> second)
+                        .orElseThrow());
+    }
+
+    @Override
     public T run() {
         transitions.clear(); // clean previous transitions
         log.debug("STARTING workflow in normal mode..");
@@ -98,11 +115,11 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         synchronized (statefulBean){
             node.execute(statefulBean);
         }
-        List<Object> nextNodes;
+        List<TransitionState> nextNodes;
         synchronized (adjList) {
             nextNodes = adjList.get(node);
         }
-        for (Object nextNode : nextNodes) {
+        for (TransitionState nextNode : nextNodes) {
             if (nextNode instanceof WorkflowStateName) {
                 WorkflowStateName next = (WorkflowStateName) nextNode;
                 if (next == WorkflowStateName.END) {
@@ -127,11 +144,11 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
     public T runStream(Consumer<Node<T, ?>> eventConsumer) {
         transitions.clear(); // clean previous transitions
         log.debug("STARTING workflow in stream mode..");
-        Queue<Object> queue = new LinkedBlockingQueue<>();
+        Queue<TransitionState> queue = new LinkedBlockingQueue<>();
         queue.add(startNode);
         transitions.add(Transition.from(WorkflowStateName.START, startNode));
         while (!queue.isEmpty()) {
-            Object current = queue.poll();
+            TransitionState current = queue.poll();
             if (current instanceof Node) {
                 Node<T,?> currentNode = (Node<T,?>) current;
                 //eventConsumer.accept(currentNode);
@@ -139,12 +156,12 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
                     currentNode.execute(statefulBean);
                 }
                 eventConsumer.accept(currentNode);
-                List<Object> nextNodes;
+                List<TransitionState> nextNodes;
                 synchronized (adjList) {
                     nextNodes = adjList.get(currentNode);
                 }
                 if (nextNodes != null) {
-                    for (Object next : nextNodes) {
+                    for (TransitionState next : nextNodes) {
                         if (next instanceof WorkflowStateName) {
                             WorkflowStateName nextState = (WorkflowStateName) next;
                             if (nextState == WorkflowStateName.END) {
@@ -180,13 +197,13 @@ public class DefaultStateWorkflow<T> implements StateWorkflow<T> {
         StringBuilder sb = new StringBuilder();
         Object lastTo = null;
         for (Transition transition : transitions) {
-            if (transition.getFrom().equals(lastTo)) {
-                sb.append(" -> ").append(transition.getTo() instanceof Node ? ((Node) transition.getTo()).getName() : transition.getTo().toString());
+            if (transition.from().equals(lastTo)) {
+                sb.append(" -> ").append(transition.to() instanceof Node ? ((Node) transition.to()).getName() : transition.to().toString());
             } else {
                 if (sb.length() > 0) sb.append(" ");
-                sb.append(transition.getFrom() instanceof Node ? ((Node)transition.getFrom()).getName() : transition.getFrom().toString()).append(" -> ").append(transition.getTo() instanceof Node ? ((Node) transition.getTo()).getName() : transition.getTo().toString());
+                sb.append(transition.from() instanceof Node ? ((Node)transition.from()).getName() : transition.from().toString()).append(" -> ").append(transition.to() instanceof Node ? ((Node) transition.to()).getName() : transition.to().toString());
             }
-            lastTo = transition.getTo() instanceof Node ? (Node) transition.getTo() : transition.getTo();
+            lastTo = transition.to() instanceof Node ? (Node) transition.to() : transition.to();
         }
         return sb.toString();
     }
