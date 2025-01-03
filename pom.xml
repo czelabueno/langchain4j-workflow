@@ -6,7 +6,7 @@
 
   <groupId>com.github.czelabueno</groupId>
   <artifactId>jai-workflow-parent</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.0-SNAPSHOT</version>
 
   <name>JavAI Workflow</name>
   <description>JavAI Workflow: Flexible workflow engine to build agentic, enterprise and modular RAG applications for Java</description>
@@ -214,7 +214,7 @@
         </snapshotRepository>
         <repository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+          <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
       </distributionManagement>
       <build>
@@ -282,8 +282,7 @@
             <extensions>true</extensions>
             <configuration>
               <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
               <autoReleaseAfterClose>false</autoReleaseAfterClose>
             </configuration>
           </plugin>
