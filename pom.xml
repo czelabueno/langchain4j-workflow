@@ -34,7 +34,6 @@
     <license>
       <name>The Apache License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
     </license>
   </licenses>
 
@@ -291,6 +290,27 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Maven GPG Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <gpgArguments>
+                <argument>--pinentry-mode</argument>
+                <argument>loopback</argument>
+              </gpgArguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!-- Sonatype Plugin -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
@@ -395,6 +415,7 @@
             <configuration>
               <serverId>ossrh</serverId>
               <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+              <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
               <autoReleaseAfterClose>false</autoReleaseAfterClose>
             </configuration>
           </plugin>
